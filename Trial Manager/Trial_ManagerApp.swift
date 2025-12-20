@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let appName: String = "Ledgerly"
+
 @main
 struct Trial_ManagerApp: App {
     var body: some Scene {
