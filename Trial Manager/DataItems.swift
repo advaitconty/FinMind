@@ -100,9 +100,15 @@ struct Transaction: Codable, Identifiable {
     var receiptImagePath: String?
 }
 
+enum SubscriptionType: Codable {
+    case monthly, annually
+}
+
 struct Subscription: Codable, Identifiable {
     var id: UUID = UUID()
-    var pricePerMonth: Double
+    var subscriptionName: String
+    var subscriptionType: SubscriptionType = .monthly
+    var price: Double
     var nextCycle: Date
     var freeTrial: Bool = false
 }

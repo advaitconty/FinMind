@@ -13,7 +13,7 @@ let appName: String = "FinMind"
 struct Trial_ManagerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WelcomeView()
         }
     }
 }
