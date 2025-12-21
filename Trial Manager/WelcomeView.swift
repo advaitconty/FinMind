@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-enum MoneyEarnRecurringSchedule {
-    case day, month, week, yearly, none
-}
-
-enum DayOfIncomeArrival {
-    case mon, tue, wed, thu, fri, sat, sun
-}
-
-enum IncomeArrivalTimeForMonthlyIncome {
-    case monthEarlyEnd, monthLateEnd, monthStart
-}
-
-
 struct WelcomeView: View {
     @State var showBottomPart: Bool = false
     @State var selectedRecurringSchedule: MoneyEarnRecurringSchedule = .none
