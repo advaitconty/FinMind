@@ -15,7 +15,7 @@ struct WelcomeView: View {
     @State var roughTimeWhenIncomeArrives: IncomeArrivalTimeForMonthlyIncome = .monthLateEnd
     @FocusState var incomeFieldSelectedFocusState: Bool
     @State var incomeFieldSelected: Bool = false
-    @State var screenNumber: Int = 2
+    @State var screenNumber: Int = 1
     @Namespace var glassNamespace
     @State var userName: String = ""
     @State var preferedNotificationTimeDaily: Date = Date()
@@ -40,11 +40,22 @@ struct WelcomeView: View {
             
             // MARK: Screen 1. To move into new file for refactor
             if showBottomPart {
-                if screenNumber == 1 {
-                    screenOne()
-                } else if screenNumber == 2 {
-                    screenTwo()
+                VStack {
+                    if screenNumber == 1 {
+                        screenOne()
+                    } else if screenNumber == 2 {
+                        screenTwo()
+                    }
                 }
+//                .background(
+//                    RoundedRectangle(cornerRadius: 12)
+//                        .fill(Color.Resolved(red: 233/255, green: 233/255, blue: 233/255))
+//                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.accentColor, lineWidth: 2)
+                )
+                
             }
         }
         .padding()

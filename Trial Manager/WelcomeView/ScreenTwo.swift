@@ -18,6 +18,7 @@ extension WelcomeView {
                 Text("NAME")
                     .font(.custom("Frutiger", size: 14, relativeTo: .body))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.leading, .trailing])
                 HStack {
                     TextField("Jake", text: $userName)
                         .font(.custom("Frutiger", size: 15, relativeTo: .body))
@@ -31,6 +32,7 @@ extension WelcomeView {
                 Text("PREFERRED REMINDER TIME")
                     .font(.custom("Frutiger", size: 14, relativeTo: .body))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.leading, .trailing])
                 HStack {
                     DatePicker("Time", selection: $preferedNotificationTimeDaily, displayedComponents: .hourAndMinute)
                         .datePickerStyle(.wheel)
@@ -46,6 +48,28 @@ extension WelcomeView {
                 .multilineTextAlignment(.leading)
                 .font(.custom("Frutiger", size: 15, relativeTo: .body))
                 .padding()
+            
+            HStack {
+                Button {
+                    withAnimation {
+                        screenNumber -= 1
+                    }
+                } label: {
+                    Image(systemName: "arrow.left")
+                    Text("Back")
+                        .font(.custom("Frutiger", size: 18, relativeTo: .body))
+                }
+                .adaptiveButtonStyle()
+                
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                        Text("Finish Setup")
+                            .font(.custom("Frutiger", size: 18, relativeTo: .body))
+                    }
+                    .adaptiveProminentButtonStyle()
+            }
         }
         .padding()
     }

@@ -17,6 +17,8 @@ extension WelcomeView {
                 Text("INCOME TYPE:")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.custom("Frutiger", size: 14, relativeTo: .body))
+                    .padding([.leading, .trailing])
+                
                 HStack {
                     incomeSelectionStreamButton(.day, text: "Daily")
                     incomeSelectionStreamButton(.week, text: "Weekly")
@@ -29,6 +31,7 @@ extension WelcomeView {
                 Text("INCOME AMOUNT (AFTER TAXES):")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.custom("Frutiger", size: 14, relativeTo: .body))
+                    .padding([.leading, .trailing])
                 VStack {
                     HStack {
                         TextField("", value: $amountOfRecuringIncome, format: .currency(code: locale.currency!.identifier))
