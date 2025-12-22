@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 enum MoneyEarnRecurringSchedule: Codable {
-    case day, month, week, yearly, none
+    case day, month, week, yearly, inconsistent, none
 }
 
 enum DayOfIncomeArrival: Codable {

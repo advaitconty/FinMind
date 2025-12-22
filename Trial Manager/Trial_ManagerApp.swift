@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let appName: String = "FinMind"
+let appName: String = "FinMinder"
 
 @main
 struct Trial_ManagerApp: App {

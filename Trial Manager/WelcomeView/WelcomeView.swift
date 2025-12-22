@@ -2,63 +2,107 @@
 //  WelcomeView.swift
 //  Trial Manager
 //
-//  Created by Milind Contractor on 20/12/25.
+//  Created by Milind Contractor on 22/12/25.
 //
 
 import SwiftUI
 
 struct WelcomeView: View {
-    @State var showBottomPart: Bool = false
-    @State var selectedRecurringSchedule: MoneyEarnRecurringSchedule = .none
-    @State var dayOfArrivalOfIncome: DayOfIncomeArrival = .mon
-    @State var amountOfRecuringIncome: Double = 1000.0
-    @State var roughTimeWhenIncomeArrives: IncomeArrivalTimeForMonthlyIncome = .monthLateEnd
-    @FocusState var incomeFieldSelectedFocusState: Bool
-    @State var incomeFieldSelected: Bool = false
-    @State var screenNumber: Int = 1
-    @Namespace var glassNamespace
-    @State var userName: String = ""
-    @State var preferedNotificationTimeDaily: Date = Date()
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
-    
+    @State var phaseNumber: Int = 1
+    @State var preferedTimeOfNotification: Date = Date()
+    @State var showNextButton: Bool = false
+    @State var userName: String = ""
+    @State var earningRecurringSchedule: MoneyEarnRecurringSchedule? = nil
+    @State var moneyMadeInThatTime: Double = 1000.0
+    @State var dayMoneyIsRecieved: DayOfIncomeArrival? = nil
+    @State var incomeArrivalTimeForMonthlyIncome: IncomeArrivalTimeForMonthlyIncome? = nil
+        
     let locale = Locale.current
-    
+
     var body: some View {
-        VStack {
-            // MARK: INTRO CONTENT. DO NOT TOUCH THIS STUFF.
-            HStack {
-                Text("Welcome to \(appName)!")
-                    .font(.custom("Frutiger", size: 34, relativeTo: .largeTitle))
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        withAnimation {
-                            showBottomPart = true
+        ZStack {
+            Color.accentColor.opacity(0.2)
+            VStack(spacing: 0) {
+                VStack {
+                        Text("Welcome to \(appName)!")
+                            .font(.title)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.white)
+                        Text("Let's get you setup to use the world's best finances tracker.")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.white)
+                    ProgressView(value: Float(phaseNumber)/4)
+                        .tint(.white)
+                }
+                .padding()
+                .background(Color.accentColor)
+                VStack {
+                    if phaseNumber == 1 {
+                        screenOne()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    } else if phaseNumber == 2 {
+                        screenTwo()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    } else if phaseNumber == 3 {
+                        screenThree()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    } else if phaseNumber == 4 {
+                            screenFour()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    }
+                    
+                    HStack {
+                        if phaseNumber != 1 {
+                            Button {
+                                withAnimation(.easeInOut, completionCriteria: .removed) {
+                                    phaseNumber -= 1
+                                } completion: {
+                                    print("Done")
+                                }
+                            } label: {
+                                Image(systemName: "arrow.left")
+                                Text("Back")
+                            }
+                            .adaptiveButtonStyle()
+                        }
+                        if showNextButton {
+                            if phaseNumber != 4 {
+                                Button {
+                                    withAnimation(.easeInOut, completionCriteria: .removed) {
+                                        phaseNumber += 1
+                                    } completion: {
+                                        print("Done")
+                                    }
+                                } label: {
+                                    Image(systemName: "arrow.right")
+                                    Text("Next")
+                                }
+                                .adaptiveProminentButtonStyle()
+                            } else {
+                                Button {
+                                    dismiss()
+                                } label: {
+                                    Image(systemName: "checkmark")
+                                    Text("Finish")
+                                }
+                                .adaptiveProminentButtonStyle()
+                            }
                         }
                     }
                 }
+                .padding()
+                .background(colorScheme != .dark ? Color.white : Color.black)
             }
-            
-            // MARK: Screen 1. To move into new file for refactor
-            if showBottomPart {
-                VStack {
-                    if screenNumber == 1 {
-                        screenOne()
-                    } else if screenNumber == 2 {
-                        screenTwo()
-                    }
-                }
-//                .background(
-//                    RoundedRectangle(cornerRadius: 12)
-//                        .fill(Color.Resolved(red: 233/255, green: 233/255, blue: 233/255))
-//                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.accentColor, lineWidth: 2)
-                )
-                
-            }
+            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+            .padding()
         }
-        .padding()
+        .ignoresSafeArea()
     }
 }
 
