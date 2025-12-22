@@ -8,75 +8,33 @@
 import SwiftUI
 
 extension WelcomeView {
-    func dayButton(_ dayOfIncomeArrival: DayOfIncomeArrival, day: String) -> some View {
-        VStack {
-            if dayMoneyIsRecieved == dayOfIncomeArrival {
-                Button {
-                    withAnimation {
-                        dayMoneyIsRecieved = dayOfIncomeArrival
-                    }
-                } label: {
-                    
-                    Text(day)
-                }
-                .adaptiveProminentButtonStyle()
-            } else {
-                Button {
-                    withAnimation {
-                        dayMoneyIsRecieved = dayOfIncomeArrival
-                    }
-                } label: {
-                    Text(day)
-                }
-                .adaptiveButtonStyle()
-            }
-        }
-    }
-    
     func payCheckbuttons(text: String, item: IncomeArrivalTimeForMonthlyIncome, caption: String) -> some View {
         VStack {
-            if item == incomeArrivalTimeForMonthlyIncome {
-                Button {
-                    withAnimation {
-                        incomeArrivalTimeForMonthlyIncome = item
-                    }
-                } label: {
-                    VStack {
-                        Text(text)
-                            .font(.callout)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(caption)
-                            .font(.caption)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding()
+            Button {
+                withAnimation {
+                    incomeArrivalTimeForMonthlyIncome = item
                 }
-                .adaptiveProminentButtonStyle()
-            } else {
-                Button {
-                    withAnimation {
-                        incomeArrivalTimeForMonthlyIncome = item
-                    }
-                } label: {
-                    VStack {
-                        Text(text)
-                            .font(.callout)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(caption)
-                            .font(.caption)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding()
+            } label: {
+                VStack {
+                    Text(text)
+                        .font(.callout)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(caption)
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .adaptiveButtonStyle()
             }
+            .foregroundStyle(colorScheme == .dark ? .white : (incomeArrivalTimeForMonthlyIncome == item ? Color.white : Color.black))
+            .padding()
+            .background(incomeArrivalTimeForMonthlyIncome == item ? Color.accentColor : Color.accentColor.opacity(0.05))
+            .clipShape(RoundedRectangle(cornerRadius: 10.0))
         }
     }
     
     func screenFour() -> some View {
         VStack {
             if earningRecurringSchedule == MoneyEarnRecurringSchedule.none || earningRecurringSchedule == MoneyEarnRecurringSchedule.inconsistent {
-                Text("Finally, since you earn nothing, how much money do you currently have? This will automatically be added to your balance.")
+                Text("Finally, since you earn nothing or have inconsistent earnings, how much money do you currently have? This will automatically be added to your balance.")
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 TextField("", value: $moneyMadeInThatTime, format: .currency(code: locale.currency!.identifier))
