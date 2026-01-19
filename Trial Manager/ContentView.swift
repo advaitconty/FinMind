@@ -17,9 +17,9 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             // To be added along with recieipts
-//            Tab("Receipts", systemImage: "receipt", value: .home) {
-//                Text("Home")
-//            }
+            //            Tab("Receipts", systemImage: "receipt", value: .home) {
+            //                Text("Home")
+            //            }
             
             
             Tab("Home", systemImage: "house", value: .home) {
@@ -27,15 +27,15 @@ struct ContentView: View {
             }
             
             // To be added along with recieipts
-//            Tab("New Log", systemImage: "minus.forwardslash.plus", value: .transact) {
-//                Text("View transactions")
-//            }
+            //            Tab("New Log", systemImage: "minus.forwardslash.plus", value: .transact) {
+            //                Text("View transactions")
+            //            }
             
-            Tab("Logs", systemImage: "list.dash", value: .transactions) {
+            Tab("Ledger", systemImage: "book.pages", value: .transactions) {
                 Text("View transactions")
             }
-
-
+            
+            
             Tab("Settings", systemImage: "gearshape.2", value: .settings) {
                 Text("Settings")
             }

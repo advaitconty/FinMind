@@ -47,6 +47,7 @@ class UserData {
     var name: String
     var dailyNotificationRingTime: Date
     var notificationsPermissionGiven: Bool = false
+    var balance: Double = 0.0
     
     // Reccuring income settings
     var recurringIncomeType: MoneyEarnRecurringSchedule?
@@ -71,6 +72,8 @@ class UserData {
         self.subscriptions = subscriptions
     }
 }
+
+
 
 /// NOTES ON FINMINDER
 /// 1. Receipt storage: to implement. This needs to be added later
