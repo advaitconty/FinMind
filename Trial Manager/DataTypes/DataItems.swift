@@ -25,6 +25,8 @@ enum IncomeArrivalTimeForMonthlyIncome: Codable {
 struct Transaction: Codable, Identifiable {
     var id: UUID = UUID()
     var timeOfTransaction: Date = Date()
+    var transactionName: String
+    var transactionIcon: String = "creditcard"
     var transactionAmount: Double
     var receiptImagePath: String?
 }

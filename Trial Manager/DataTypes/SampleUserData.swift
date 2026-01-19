@@ -1,11 +1,6 @@
-//
-//  SampleUserData.swift
-//  Trial Manager
-//
-//  Created by Milind Contractor on 19/1/26.
-//
-
 import Foundation
+
+// MARK: - Sample UserData Generator
 
 extension UserData {
     
@@ -14,16 +9,22 @@ extension UserData {
         let transactions = [
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -5, to: Date())!,
+                transactionName: "Grocery Shopping",
+                transactionIcon: "cart",
                 transactionAmount: 45.50,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -3, to: Date())!,
+                transactionName: "Restaurant Dinner",
+                transactionIcon: "fork.knife",
                 transactionAmount: 120.00,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Date(),
+                transactionName: "Gas Station",
+                transactionIcon: "fuelpump",
                 transactionAmount: 35.75,
                 receiptImagePath: nil
             )
@@ -63,11 +64,15 @@ extension UserData {
         let transactions = [
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -7, to: Date())!,
+                transactionName: "Electric Bill",
+                transactionIcon: "bolt",
                 transactionAmount: 85.30,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
+                transactionName: "Coffee Shop",
+                transactionIcon: "cup.and.saucer",
                 transactionAmount: 50.00,
                 receiptImagePath: nil
             )
@@ -107,21 +112,29 @@ extension UserData {
         let transactions = [
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -10, to: Date())!,
+                transactionName: "Office Supplies",
+                transactionIcon: "pencil.and.outline",
                 transactionAmount: 250.00,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -8, to: Date())!,
+                transactionName: "Internet Bill",
+                transactionIcon: "wifi",
                 transactionAmount: 75.50,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -4, to: Date())!,
+                transactionName: "Client Lunch",
+                transactionIcon: "fork.knife",
                 transactionAmount: 120.00,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+                transactionName: "Book Store",
+                transactionIcon: "book",
                 transactionAmount: 45.99,
                 receiptImagePath: nil
             )
@@ -168,11 +181,15 @@ extension UserData {
         let transactions = [
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+                transactionName: "Fast Food",
+                transactionIcon: "takeoutbag.and.cup.and.straw",
                 transactionAmount: 12.50,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Date(),
+                transactionName: "Campus Cafe",
+                transactionIcon: "cup.and.saucer",
                 transactionAmount: 8.75,
                 receiptImagePath: nil
             )
@@ -199,7 +216,7 @@ extension UserData {
             name: "Emma Wilson",
             dailyNotificationRingTime: Calendar.current.date(from: DateComponents(hour: 7, minute: 0))!,
             notificationsPermissionGiven: false,
-            recurringIncomeType: MoneyEarnRecurringSchedule.none,
+            recurringIncomeType: .none,
             recurringIncomeAmount: nil,
             incomeArrivalTimeForMonthlyIncome: .monthStart,
             transactions: transactions,
@@ -212,16 +229,22 @@ extension UserData {
         let transactions = [
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -3, to: Date())!,
+                transactionName: "Lunch",
+                transactionIcon: "fork.knife",
                 transactionAmount: 30.00,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
+                transactionName: "Transportation",
+                transactionIcon: "bus",
                 transactionAmount: 25.50,
                 receiptImagePath: nil
             ),
             Transaction(
                 timeOfTransaction: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+                transactionName: "Snacks",
+                transactionIcon: "cart",
                 transactionAmount: 15.00,
                 receiptImagePath: nil
             )
@@ -260,3 +283,15 @@ extension UserData {
         ]
     }
 }
+
+// MARK: - Usage Example
+/*
+ // In your SwiftData ModelContainer setup:
+ let sampleUser = UserData.monthlySalaryEmployee()
+ modelContext.insert(sampleUser)
+ 
+ // Or insert all samples for testing:
+ for sample in UserData.allSamples() {
+     modelContext.insert(sample)
+ }
+ */
