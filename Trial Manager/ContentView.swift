@@ -16,17 +16,20 @@ struct ContentView: View {
     @State var selectedTab: SelectedTab = .home
     var body: some View {
         TabView(selection: $selectedTab) {
-            Tab("Receipts", systemImage: "receipt", value: .home) {
-                Text("Home")
-            }
+            // To be added along with recieipts
+//            Tab("Receipts", systemImage: "receipt", value: .home) {
+//                Text("Home")
+//            }
             
-            Tab("New Log", systemImage: "minus.forwardslash.plus", value: .transact) {
-                Text("View transactions")
-            }
-
+            
             Tab("Home", systemImage: "house", value: .home) {
                 Text("Home")
             }
+            
+            // To be added along with recieipts
+//            Tab("New Log", systemImage: "minus.forwardslash.plus", value: .transact) {
+//                Text("View transactions")
+//            }
             
             Tab("Logs", systemImage: "list.dash", value: .transactions) {
                 Text("View transactions")
