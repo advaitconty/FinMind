@@ -66,8 +66,10 @@ struct WelcomeView: View {
                                     print("Done")
                                 }
                             } label: {
+                                Spacer()
                                 Image(systemName: "arrow.left")
                                 Text("Back")
+                                Spacer()
                             }
                             .adaptiveButtonStyle()
                         }
@@ -80,16 +82,20 @@ struct WelcomeView: View {
                                         print("Done")
                                     }
                                 } label: {
+                                    Spacer()
                                     Image(systemName: "arrow.right")
                                     Text("Next")
+                                    Spacer()
                                 }
                                 .adaptiveProminentButtonStyle()
                             } else {
                                 Button {
                                     dismiss()
                                 } label: {
+                                    Spacer()
                                     Image(systemName: "checkmark")
                                     Text("Finish")
+                                    Spacer()
                                 }
                                 .adaptiveProminentButtonStyle()
                             }
@@ -99,7 +105,7 @@ struct WelcomeView: View {
                 .padding()
                 .background(colorScheme != .dark ? Color.white : Color.black)
             }
-            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+            .clipShape(RoundedRectangle(cornerRadius: 20.0))
             .padding()
         }
         .ignoresSafeArea()

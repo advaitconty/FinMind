@@ -23,7 +23,7 @@ struct ContentView: View {
             
             
             Tab("Home", systemImage: "house", value: .home) {
-                Text("Home")
+                HomeView(userData: .constant(UserData.monthlySalaryEmployee()))
             }
             
             // To be added along with recieipts

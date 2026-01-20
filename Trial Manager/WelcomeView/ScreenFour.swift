@@ -10,24 +10,44 @@ import SwiftUI
 extension WelcomeView {
     func payCheckbuttons(text: String, item: IncomeArrivalTimeForMonthlyIncome, caption: String) -> some View {
         VStack {
-            Button {
-                withAnimation {
-                    incomeArrivalTimeForMonthlyIncome = item
+            if incomeArrivalTimeForMonthlyIncome == item {
+                Button {
+                    withAnimation {
+                        incomeArrivalTimeForMonthlyIncome = item
+                    }
+                } label: {
+                    VStack {
+                        Text(text)
+                            .font(.callout)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(caption)
+                            .font(.caption)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding()
                 }
-            } label: {
-                VStack {
-                    Text(text)
-                        .font(.callout)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(caption)
-                        .font(.caption)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                .foregroundStyle(colorScheme == .dark ? .white : (incomeArrivalTimeForMonthlyIncome == item ? Color.white : Color.black))
+                .adaptiveProminentButtonStyle()
+            } else {
+                    Button {
+                        withAnimation {
+                            incomeArrivalTimeForMonthlyIncome = item
+                        }
+                    } label: {
+                        VStack {
+                            Text(text)
+                                .font(.callout)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(caption)
+                                .font(.caption)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .padding()
+                    }
+                    .foregroundStyle(colorScheme == .dark ? .white : (incomeArrivalTimeForMonthlyIncome == item ? Color.white : Color.black))
+                    .adaptiveButtonStyle()
             }
-            .foregroundStyle(colorScheme == .dark ? .white : (incomeArrivalTimeForMonthlyIncome == item ? Color.white : Color.black))
-            .padding()
-            .background(incomeArrivalTimeForMonthlyIncome == item ? Color.accentColor : Color.accentColor.opacity(0.05))
-            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+
         }
     }
     
@@ -38,13 +58,15 @@ extension WelcomeView {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 TextField("", value: $moneyMadeInThatTime, format: .currency(code: locale.currency!.identifier))
-                    .textFieldStyle(.roundedBorder)
+                    .padding()
+                    .glassEffect()
             } else  {
                 Text("Finally, how much money do you make in that time, and most importantly, around when do you get it?")
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 TextField("", value: $moneyMadeInThatTime, format: .currency(code: locale.currency!.identifier))
-                    .textFieldStyle(.roundedBorder)
+                    .padding()
+                    .glassEffect()
                 
                 // If it is daily
                 if earningRecurringSchedule == .week {
@@ -75,6 +97,9 @@ extension WelcomeView {
                             }
                         }
                     }
+                    .padding([.leading, .trailing])
+                    .padding([.top, .bottom], 10)
+                    .glassEffect()
                     .onAppear {
                         withAnimation {
                             showNextButton = false

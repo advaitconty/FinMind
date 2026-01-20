@@ -11,6 +11,7 @@ struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var userData: UserData
     @State var openedTransaction: Transaction? = nil
+    @State var newTransactionView: Bool = false
     
     func transactionListItem(_ transaction: Transaction) -> some View {
         Button {
@@ -98,13 +99,16 @@ struct HomeView: View {
                 .ignoresSafeArea()
                 
                 Button {
-                    
+                    newTransactionView = true
                 } label: {
                     Image(systemName: "plus")
                         .font(.largeTitle)
                 }
                 .adaptiveProminentButtonStyle()
                 .padding()
+                .fullScreenCover(isPresented: $newTransactionView) {
+                    NewTransactionView()
+                }
             }
         }
     }

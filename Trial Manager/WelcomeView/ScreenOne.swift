@@ -13,7 +13,6 @@ extension WelcomeView {
             Text("Before we start, what should we call you?")
                 .frame(maxWidth: .infinity, alignment: .leading)
             TextField("Warren Buffet", text: $userName)
-                .textFieldStyle(.roundedBorder)
                 .onChange(of: userName) {
                     if !userName.isEmpty {
                         withAnimation {
@@ -36,6 +35,8 @@ extension WelcomeView {
                         }
                     }
                 }
+                .padding()
+                .glassEffect()
         }
     }
 }

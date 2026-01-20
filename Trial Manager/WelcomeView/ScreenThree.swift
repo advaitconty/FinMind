@@ -9,25 +9,49 @@ import SwiftUI
 
 extension WelcomeView {
     func incomeSourceButton(_ incomeType: MoneyEarnRecurringSchedule, title: String, body: String) -> some View {
-        Button {
-            withAnimation {
-                earningRecurringSchedule = incomeType
+        VStack {
+            if earningRecurringSchedule == incomeType {
+                Button {
+                    withAnimation {
+                        earningRecurringSchedule = incomeType
+                    }
+                } label: {
+                    VStack {
+                        Text(title)
+                            .font(.callout)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(body)
+                            .font(.caption)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding()
+                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                }
+                .foregroundStyle(colorScheme == .dark ? .white : (earningRecurringSchedule == incomeType ? Color.white : Color.black))
+                .adaptiveProminentButtonStyle()
+            } else {
+                Button {
+                    withAnimation {
+                        earningRecurringSchedule = incomeType
+                    }
+                } label: {
+                    VStack {
+                        Text(title)
+                            .font(.callout)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(body)
+                            .font(.caption)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding()
+                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                }
+                .foregroundStyle(colorScheme == .dark ? .white : (earningRecurringSchedule == incomeType ? Color.white : Color.black))
+                .adaptiveButtonStyle()
             }
-        } label: {
-            VStack {
-                Text(title)
-                    .font(.callout)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(body)
-                    .font(.caption)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .foregroundStyle(colorScheme == .dark ? .white : (earningRecurringSchedule == incomeType ? Color.white : Color.black))
-            .padding()
-            .background(earningRecurringSchedule == incomeType ? Color.accentColor : Color.accentColor.opacity(0.05))
-            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+
         }
-        .buttonStyle(.plain)
+
     }
     
     func screenThree() -> some View {
