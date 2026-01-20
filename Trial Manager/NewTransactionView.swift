@@ -16,6 +16,7 @@ struct NewTransactionView: View {
     @State var transactionType: TransactionType = .essential
     @State var transactionSymbol: String = "creditcard"
     @State var showSymbolSelector: Bool = false
+    @State var newTransactionColor: Color = .blue
     @Environment(\.dismiss) var dismiss
     var body: some View {
         GeometryReader { reader in
@@ -28,10 +29,7 @@ struct NewTransactionView: View {
                                 showSymbolSelector = true
                             }
                         
-                            .popover(isPresented: $showSymbolSelector, arrowEdge: .trailing) {
-                            SymbolPicker(symbol: $transactionSymbol)
-                                .presentationDetents([.medium, .large])
-                        }
+                        
                         Text(transactionName.isEmpty ? "New Transaction" : transactionName)
                             .font(.title)
                         Spacer()
@@ -98,6 +96,28 @@ struct NewTransactionView: View {
                         .padding([.top, .bottom], 10)
                         .glassEffect()
                         
+                        HStack {
+                            Text("Icon background color")
+                            Spacer()
+                            ColorPicker("", selection: $newTransactionColor)
+                        }
+                        .padding()
+                        .glassEffect()
+                        
+                        HStack {
+                            Text("Transaction Icon")
+                            Spacer()
+                            Button {
+                                showSymbolSelector = true
+                            } label: {
+                                Image(systemName: transactionSymbol)
+                            }
+                            .adaptiveProminentButtonStyle()
+                            .tint(newTransactionColor)
+                        }
+                        .padding()
+                        .glassEffect()
+                        
                         Button {
                             
                         } label: {
@@ -107,6 +127,7 @@ struct NewTransactionView: View {
                             Spacer()
                         }
                         .adaptiveProminentButtonStyle()
+                        
                     }
                     .padding()
                     .frame(minWidth: reader.size.width - 20)
@@ -115,6 +136,10 @@ struct NewTransactionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20.0))
                 .padding()
                 .frame(maxWidth: reader.size.width - 20, maxHeight: reader.size.height)
+                .popover(isPresented: $showSymbolSelector, arrowEdge: .trailing) {
+                SymbolPicker(symbol: $transactionSymbol)
+                    .presentationDetents([.medium, .large])
+            }
                 
             }
             .ignoresSafeArea()

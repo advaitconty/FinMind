@@ -22,19 +22,14 @@ struct HomeView: View {
                     .padding()
                     .background {
                         Circle()
-                            .fill(Color(
-                                red: Double.random(in: 0...1),
-                                green: Double.random(in: 0...1),
-                                blue: Double.random(in: 0...1),
-                                opacity: true ? Double.random(in: 0...1) : 1
-                            ))
+                            .fill(transaction.iconBackgroundColor)
                     }
                 VStack(alignment: .leading) {
                     Text(transaction.transactionName)
                     Text("$\(String(format: "%.2f", transaction.transactionAmount))")
                 }
                 Spacer()
-                Image(systemName: "chevron.right")
+//                Image(systemName: "chevron.right")
             }
             .padding()
             .glassEffect()

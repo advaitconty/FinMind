@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import SwiftUI
 import Foundation
 import UIKit
 
@@ -33,6 +34,7 @@ struct Transaction: Codable, Identifiable {
     var transactionIcon: String = "creditcard"
     var transactionAmount: Double
     var receiptImagePath: String?
+    var iconBackgroundColor: Color = .blue
 }
 
 enum SubscriptionType: Codable {
