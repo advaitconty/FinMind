@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SymbolPicker
 
 struct NewTransactionView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -13,6 +14,8 @@ struct NewTransactionView: View {
     @State var amountSpent: Double = 0.0
     @State var moneyEarnt: Bool = false
     @State var transactionType: TransactionType = .essential
+    @State var transactionSymbol: String = "creditcard"
+    @State var showSymbolSelector: Bool = false
     @Environment(\.dismiss) var dismiss
     var body: some View {
         GeometryReader { reader in
@@ -20,6 +23,15 @@ struct NewTransactionView: View {
                 Color.accentColor.opacity(0.2)
                 VStack(spacing: 0) {
                     HStack {
+                        Image(systemName: transactionSymbol)
+                            .onTapGesture {
+                                showSymbolSelector = true
+                            }
+                        
+                            .popover(isPresented: $showSymbolSelector, arrowEdge: .trailing) {
+                            SymbolPicker(symbol: $transactionSymbol)
+                                .presentationDetents([.medium, .large])
+                        }
                         Text(transactionName.isEmpty ? "New Transaction" : transactionName)
                             .font(.title)
                         Spacer()

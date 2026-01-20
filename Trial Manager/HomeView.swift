@@ -106,8 +106,9 @@ struct HomeView: View {
                 }
                 .adaptiveProminentButtonStyle()
                 .padding()
-                .fullScreenCover(isPresented: $newTransactionView) {
+                .sheet(isPresented: $newTransactionView) {
                     NewTransactionView()
+                        .presentationDetents([.medium, .large])
                 }
             }
         }
