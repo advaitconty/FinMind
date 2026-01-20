@@ -21,6 +21,10 @@ enum IncomeArrivalTimeForMonthlyIncome: Codable {
     case monthEarlyEnd, monthLateEnd, monthStart
 }
 
+enum TransactionType: Codable {
+    case essential, rent, facilities, food, utilities, shopping, other
+}
+
 // MARK: user data management
 struct Transaction: Codable, Identifiable {
     var id: UUID = UUID()

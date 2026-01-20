@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F11FCCBA2F1E90A600DA5253 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = F11FCCB92F1E90A600DA5253 /* SymbolPicker */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		F14EF4222EF6A45F004D0E93 /* Trial Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Trial Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F11FCCBA2F1E90A600DA5253 /* SymbolPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "Trial Manager";
 			packageProductDependencies = (
+				F11FCCB92F1E90A600DA5253 /* SymbolPicker */,
 			);
 			productName = "Trial Manager";
 			productReference = F14EF4222EF6A45F004D0E93 /* Trial Manager.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = F14EF4192EF6A45F004D0E93;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F11FCCB82F1E90A600DA5253 /* XCLocalSwiftPackageReference "../SymbolPicker" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F14EF4232EF6A45F004D0E93 /* Products */;
 			projectDirPath = "";
@@ -338,6 +347,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		F11FCCB82F1E90A600DA5253 /* XCLocalSwiftPackageReference "../SymbolPicker" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../SymbolPicker;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F11FCCB92F1E90A600DA5253 /* SymbolPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SymbolPicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F14EF41A2EF6A45F004D0E93 /* Project object */;
 }
