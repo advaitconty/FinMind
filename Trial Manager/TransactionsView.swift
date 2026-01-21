@@ -81,12 +81,14 @@ struct TransactionsView: View {
                         Text("Transaction History")
                             .font(.largeTitle)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.white)
                     }
                     .padding()
                     .frame(minWidth: reader.size.width - 20)
                     .background(Color.accentColor)
                     
                     VStack {
+                        if !groupedTransactions.isEmpty {
                         HStack {
                             Image(systemName: "magnifyingglass")
                             TextField("Search through your history...", text: $searchText)
@@ -94,45 +96,48 @@ struct TransactionsView: View {
                         .padding()
                         .glassEffect()
                         
-                        ViewThatFits {
-                            VStack(alignment: .leading) {
-                                ForEach(groupedTransactions, id: \.date) { group in
-                                    VStack(alignment: .leading, spacing: 8) {
-
-                                        // Date header
-                                        Text(sectionTitle(for: group.date))
-                                            .font(.headline)
-                                            .padding(.horizontal)
-
-                                        // Transactions for that day
-                                        ForEach(group.transactions, id: \.id) { transaction in
-                                            transactionListItem(transaction)
-                                        }
-                                    }
-                                }
-
-                            }
-                            
-                            ScrollView {
-                                VStack(alignment: .center, spacing: 0) {
+                            ViewThatFits {
+                                VStack(alignment: .leading) {
                                     ForEach(groupedTransactions, id: \.date) { group in
                                         VStack(alignment: .leading, spacing: 8) {
-
+                                            
                                             // Date header
                                             Text(sectionTitle(for: group.date))
                                                 .font(.headline)
                                                 .padding(.horizontal)
-
+                                            
                                             // Transactions for that day
                                             ForEach(group.transactions, id: \.id) { transaction in
                                                 transactionListItem(transaction)
                                             }
                                         }
                                     }
+                                    
+                                }
+                                
+                                ScrollView {
+                                    VStack(alignment: .center, spacing: 0) {
+                                        ForEach(groupedTransactions, id: \.date) { group in
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                
+                                                // Date header
+                                                Text(sectionTitle(for: group.date))
+                                                    .font(.headline)
+                                                    .padding(.horizontal)
+                                                
+                                                // Transactions for that day
+                                                ForEach(group.transactions, id: \.id) { transaction in
+                                                    transactionListItem(transaction)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                            .scrollBounceBehavior(.basedOnSize, axes: .vertical)
+                        } else {
+                            Text("No transaction history found! Please start by adding a transaction to see it here.")
                         }
-                        .scrollBounceBehavior(.basedOnSize, axes: .vertical)
                     }
                     .padding()
                     .frame(minWidth: reader.size.width - 20)

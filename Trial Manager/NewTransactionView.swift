@@ -29,15 +29,17 @@ struct NewTransactionView: View {
                             .onTapGesture {
                                 showSymbolSelector = true
                             }
-                        
+                            .foregroundStyle(.white)
                         
                         Text(transactionName.isEmpty ? "New Transaction" : transactionName)
                             .font(.title)
+                            .foregroundStyle(.white)
                         Spacer()
                         Button {
                             dismiss()
                         } label: {
                             Image(systemName: "xmark")
+                                .foregroundStyle(.white)
                         }
                         .adaptiveButtonStyle()
                     }
@@ -121,6 +123,11 @@ struct NewTransactionView: View {
                         
                         Button {
                             userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType))
+                            if moneyEarnt {
+                                userData.balance += amountSpent
+                            } else {
+                                userData.balance -= amountSpent
+                            }
                             dismiss()
                         } label: {
                             Spacer()
@@ -138,10 +145,9 @@ struct NewTransactionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20.0))
                 .padding()
                 .frame(maxWidth: reader.size.width - 20, maxHeight: reader.size.height)
-                .popover(isPresented: $showSymbolSelector, arrowEdge: .trailing) {
-                SymbolPicker(symbol: $transactionSymbol)
-                    .presentationDetents([.medium, .large])
-            }
+                .fullScreenCover(isPresented: $showSymbolSelector) {
+                    SymbolPicker(symbol: $transactionSymbol)
+                }
                 
             }
             .ignoresSafeArea()

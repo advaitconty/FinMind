@@ -15,7 +15,7 @@ enum SelectedTab: Codable {
 
 struct ContentView: View {
     @State var selectedTab: SelectedTab = .home
-    @State var showSetupScreen: Bool = false
+    @AppStorage("showSetupScreen") var showSetupScreen: Bool = true
     @Environment(\.modelContext) var modelContext
     @Query var swiftDataUserData: [UserData]
     var userData: Binding<UserData> {
@@ -23,7 +23,6 @@ struct ContentView: View {
             if !swiftDataUserData.isEmpty {
                 return swiftDataUserData.first!
             } else {
-                showSetupScreen = true
                 return UserData.monthlySalaryEmployee()
             }
         } set: { value in
@@ -52,7 +51,7 @@ struct ContentView: View {
             
             
             Tab("Home", systemImage: "house", value: .home) {
-                HomeView(userData: .constant(UserData.monthlySalaryEmployee()))
+                HomeView(userData: userData)
             }
             
             // To be added along with recieipts

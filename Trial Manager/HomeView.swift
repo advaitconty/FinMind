@@ -57,7 +57,9 @@ struct HomeView: View {
                             Text("$\(String(format: "%.2f", userData.balance)) ")
                                 .font(.largeTitle)
                                 .fontWidth(.expanded)
+                                .foregroundStyle(.white)
                             Text("balance available")
+                                .foregroundStyle(.white)
                         }
                         .padding()
                         .frame(minWidth: reader.size.width - 20)
@@ -67,24 +69,31 @@ struct HomeView: View {
                             Text("TODAY'S TRANSACTIONS")
                                 .font(.callout)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            ViewThatFits {
-                                VStack(alignment: .leading) {
-                                    ForEach(userData.transactions, id: \.id) { transaction in
-                                        if Calendar.current.isDateInToday(transaction.timeOfTransaction) {   transactionListItem(transaction)
+                            if userData.transactions.filter({
+                                Calendar.current.isDateInToday($0.timeOfTransaction)
+                            }).isEmpty {
+                                Text("No transactions today! Good job for saving up!")
+                            } else {
+                                ViewThatFits {
+                                    VStack(alignment: .leading) {
+                                        ForEach(userData.transactions, id: \.id) { transaction in
+                                            if Calendar.current.isDateInToday(transaction.timeOfTransaction) {
+                                                transactionListItem(transaction)
+                                            }
                                         }
                                     }
-                                }
-                                
-                                ScrollView {
-                                    VStack(alignment: .center, spacing: 0) {
-                                        ForEach(userData.transactions, id: \.id) { transaction in
-                                            if Calendar.current.isDateInToday(transaction.timeOfTransaction) {   transactionListItem(transaction)
+                                    
+                                    ScrollView {
+                                        VStack(alignment: .center, spacing: 0) {
+                                            ForEach(userData.transactions, id: \.id) { transaction in
+                                                if Calendar.current.isDateInToday(transaction.timeOfTransaction) {   transactionListItem(transaction)
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                .scrollBounceBehavior(.basedOnSize, axes: .vertical)
                             }
-                            .scrollBounceBehavior(.basedOnSize, axes: .vertical)
                         }
                         .padding()
                         .frame(minWidth: reader.size.width - 20)
@@ -106,7 +115,7 @@ struct HomeView: View {
                 .padding()
                 .sheet(isPresented: $newTransactionView) {
                     NewTransactionView(userData: $userData)
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.fraction(0.7), .large])
                 }
             }
         }
