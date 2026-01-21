@@ -77,21 +77,11 @@ struct NewTransactionView: View {
                         HStack {
                             Text("Transaction Type")
                             Spacer()
-                            Picker("", selection: $transactionType) {
-                                Text("Essentials")
-                                    .tag(TransactionType.essential)
-                                Text("Facilities")
-                                    .tag(TransactionType.facilities)
-                                Text("Food")
-                                    .tag(TransactionType.food)
-                                Text("Rent")
-                                    .tag(TransactionType.rent)
-                                Text("Shoppping")
-                                    .tag(TransactionType.shopping)
-                                Text("Utilities")
-                                    .tag(TransactionType.utilities)
-                                Text("Other")
-                                    .tag(TransactionType.other)
+                            Picker("Transaction Type", selection: $transactionType) {
+                                ForEach(TransactionType.pickerOptions(isIncomeMode: moneyEarnt), id: \.self) {
+                                    Text($0.rawValue)
+                                        .tag($0)
+                                }
                             }
                             .tint(.accentColor)
                         }
@@ -122,7 +112,7 @@ struct NewTransactionView: View {
                         .glassEffect()
                         
                         Button {
-                            userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType))
+                            userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType, additionToBankAccount: moneyEarnt))
                             if moneyEarnt {
                                 userData.balance += amountSpent
                             } else {

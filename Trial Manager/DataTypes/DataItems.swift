@@ -22,9 +22,38 @@ enum IncomeArrivalTimeForMonthlyIncome: Codable {
     case monthEarlyEnd, monthLateEnd, monthStart
 }
 
-enum TransactionType: Codable {
-    case essential, rent, facilities, food, utilities, shopping, other
+enum TransactionType: String, Codable, CaseIterable {
+    case essential = "Essential"
+    case rent = "Rent"
+    case facilities = "Facility Rental"
+    case food = "Food"
+    case utilities = "Utilities"
+    case shopping = "Shopping"
+    case entertainment = "Entertainment"
+    case gifts = "Gifts"
+    case insurance = "Insurance"
+    case medical = "Medical"
+    case education = "Education"
+    case clothing = "Clothing"
+    case travel = "Travel"
+    case miscellaneous = "Miscellaneous"
+    case paycheck = "Paycheck"
+    case sideIncome = "Side Income"
+    case other = "Other"
 }
+
+extension TransactionType {
+    static func pickerOptions(isIncomeMode: Bool) -> [TransactionType] {
+        if isIncomeMode {
+            return [.paycheck, .sideIncome]
+        } else {
+            return Self.allCases.filter {
+                $0 != .paycheck && $0 != .sideIncome
+            }
+        }
+    }
+}
+
 
 // MARK: user data management
 struct Transaction: Codable, Identifiable {
@@ -36,6 +65,7 @@ struct Transaction: Codable, Identifiable {
     var receiptImagePath: String?
     var iconBackgroundColor: Color = .blue
     var transactionCategory: TransactionType = .essential
+    var additionToBankAccount: Bool = false
 }
 
 enum SubscriptionType: Codable {
@@ -57,6 +87,7 @@ class UserData {
     var dailyNotificationRingTime: Date
     var notificationsPermissionGiven: Bool = false
     var balance: Double = 0.0
+    var lastAddedIncomeTime: Date = Date()
     
     // Reccuring income settings
     var recurringIncomeType: MoneyEarnRecurringSchedule?

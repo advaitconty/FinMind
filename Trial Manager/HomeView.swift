@@ -30,6 +30,11 @@ struct HomeView: View {
                     Text("$\(String(format: "%.2f", transaction.transactionAmount))")
                 }
                 Spacer()
+                if transaction.additionToBankAccount{
+                    Image(systemName: "plus")
+                } else {
+                    Image(systemName: "minus")
+                }
 //                Image(systemName: "chevron.right")
             }
             .padding()

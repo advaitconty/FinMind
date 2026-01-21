@@ -93,6 +93,8 @@ struct WelcomeView: View {
                             } else {
                                 Button {
                                     userData = UserData(name: userName, dailyNotificationRingTime: preferedTimeOfNotification, notificationsPermissionGiven: authorizationGrantStatusForNotifications, balance: moneyMadeInThatTime, incomeArrivalTimeForMonthlyIncome: incomeArrivalTimeForMonthlyIncome ?? nil, transactions: [], subscriptions: [])
+                                    userData.lastAddedIncomeTime = Date()
+                                    userData.transactions.append(Transaction(transactionName: "Paycheck", transactionAmount: moneyMadeInThatTime, transactionCategory: .paycheck, additionToBankAccount: true))
                                     dismiss()
                                 } label: {
                                     Spacer()
