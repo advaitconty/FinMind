@@ -24,6 +24,7 @@ struct HomeView: View {
                         Circle()
                             .fill(transaction.iconBackgroundColor)
                     }
+                    .frame(width: 50, height: 50)
                 VStack(alignment: .leading) {
                     Text(transaction.transactionName)
                     Text("$\(String(format: "%.2f", transaction.transactionAmount))")
@@ -69,14 +70,16 @@ struct HomeView: View {
                             ViewThatFits {
                                 VStack(alignment: .leading) {
                                     ForEach(userData.transactions, id: \.id) { transaction in
-                                        transactionListItem(transaction)
+                                        if Calendar.current.isDateInToday(transaction.timeOfTransaction) {   transactionListItem(transaction)
+                                        }
                                     }
                                 }
                                 
                                 ScrollView {
                                     VStack(alignment: .center, spacing: 0) {
                                         ForEach(userData.transactions, id: \.id) { transaction in
-                                            transactionListItem(transaction)
+                                            if Calendar.current.isDateInToday(transaction.timeOfTransaction) {   transactionListItem(transaction)
+                                            }
                                         }
                                     }
                                 }
@@ -102,7 +105,7 @@ struct HomeView: View {
                 .adaptiveProminentButtonStyle()
                 .padding()
                 .sheet(isPresented: $newTransactionView) {
-                    NewTransactionView()
+                    NewTransactionView(userData: $userData)
                         .presentationDetents([.medium, .large])
                 }
             }

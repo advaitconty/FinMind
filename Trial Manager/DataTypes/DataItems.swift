@@ -35,6 +35,7 @@ struct Transaction: Codable, Identifiable {
     var transactionAmount: Double
     var receiptImagePath: String?
     var iconBackgroundColor: Color = .blue
+    var transactionCategory: TransactionType = .essential
 }
 
 enum SubscriptionType: Codable {
@@ -60,19 +61,19 @@ class UserData {
     // Reccuring income settings
     var recurringIncomeType: MoneyEarnRecurringSchedule?
     var recurringIncomeAmount: Double?
-    var incomeArrivalTimeForMonthlyIncome: IncomeArrivalTimeForMonthlyIncome
+    var incomeArrivalTimeForMonthlyIncome: IncomeArrivalTimeForMonthlyIncome?
     
     // Financial tracking
-    @Relationship(deleteRule: .cascade)
     var transactions: [Transaction]
     
     // Subscriptions
     var subscriptions: [Subscription]
     
-    init(name: String, dailyNotificationRingTime: Date, notificationsPermissionGiven: Bool, recurringIncomeType: MoneyEarnRecurringSchedule? = nil, recurringIncomeAmount: Double? = nil, incomeArrivalTimeForMonthlyIncome: IncomeArrivalTimeForMonthlyIncome, transactions: [Transaction], subscriptions: [Subscription]) {
+    init(name: String, dailyNotificationRingTime: Date, notificationsPermissionGiven: Bool, balance: Double = 0.0, recurringIncomeType: MoneyEarnRecurringSchedule? = nil, recurringIncomeAmount: Double? = nil, incomeArrivalTimeForMonthlyIncome: IncomeArrivalTimeForMonthlyIncome?, transactions: [Transaction], subscriptions: [Subscription]) {
         self.name = name
         self.dailyNotificationRingTime = dailyNotificationRingTime
         self.notificationsPermissionGiven = notificationsPermissionGiven
+        self.balance = balance
         self.recurringIncomeType = recurringIncomeType
         self.recurringIncomeAmount = recurringIncomeAmount
         self.incomeArrivalTimeForMonthlyIncome = incomeArrivalTimeForMonthlyIncome

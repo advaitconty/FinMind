@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 let appName: String = "FinMinder"
 
@@ -13,7 +14,8 @@ let appName: String = "FinMinder"
 struct Trial_ManagerApp: App {
     var body: some Scene {
         WindowGroup {
-            WelcomeView()
+            ContentView()
+                .modelContainer(for: UserData.self)
         }
     }
 }

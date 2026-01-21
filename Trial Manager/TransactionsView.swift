@@ -10,6 +10,42 @@ import SwiftUI
 struct TransactionsView: View {
     @Binding var userData: UserData
     @Environment(\.colorScheme) var colorScheme
+    @State var searchText: String = ""
+    
+    var filteredTransactions: [Transaction] {
+        if searchText.isEmpty {
+            return userData.transactions
+        }
+
+        return userData.transactions.filter { transaction in
+            transaction.transactionName.localizedCaseInsensitiveContains(searchText)
+            || String(format: "%.2f", transaction.transactionAmount).contains(searchText)
+        }
+    }
+    
+    var groupedTransactions: [(date: Date, transactions: [Transaction])] {
+        let calendar = Calendar.current
+
+        let grouped = Dictionary(grouping: filteredTransactions) {
+            calendar.startOfDay(for: $0.timeOfTransaction)
+        }
+
+        return grouped
+            .map { (date: $0.key, transactions: $0.value) }
+            .sorted { $0.date > $1.date }
+    }
+
+    func sectionTitle(for date: Date) -> String {
+        let calendar = Calendar.current
+        
+        if calendar.isDateInToday(date) {
+            return "Today"
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            return date.formatted(date: .abbreviated, time: .omitted)
+        }
+    }
     
     func transactionListItem(_ transaction: Transaction) -> some View {
         Button {
@@ -22,6 +58,7 @@ struct TransactionsView: View {
                         Circle()
                             .fill(transaction.iconBackgroundColor)
                     }
+                    .frame(width: 50, height: 50)
                 VStack(alignment: .leading) {
                     Text(transaction.transactionName)
                     Text("$\(String(format: "%.2f", transaction.transactionAmount))")
@@ -50,17 +87,47 @@ struct TransactionsView: View {
                     .background(Color.accentColor)
                     
                     VStack {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                            TextField("Search through your history...", text: $searchText)
+                        }
+                        .padding()
+                        .glassEffect()
+                        
                         ViewThatFits {
                             VStack(alignment: .leading) {
-                                ForEach(userData.transactions, id: \.id) { transaction in
-                                    transactionListItem(transaction)
+                                ForEach(groupedTransactions, id: \.date) { group in
+                                    VStack(alignment: .leading, spacing: 8) {
+
+                                        // Date header
+                                        Text(sectionTitle(for: group.date))
+                                            .font(.headline)
+                                            .padding(.horizontal)
+
+                                        // Transactions for that day
+                                        ForEach(group.transactions, id: \.id) { transaction in
+                                            transactionListItem(transaction)
+                                        }
+                                    }
                                 }
+
                             }
                             
                             ScrollView {
                                 VStack(alignment: .center, spacing: 0) {
-                                    ForEach(userData.transactions, id: \.id) { transaction in
-                                        transactionListItem(transaction)
+                                    ForEach(groupedTransactions, id: \.date) { group in
+                                        VStack(alignment: .leading, spacing: 8) {
+
+                                            // Date header
+                                            Text(sectionTitle(for: group.date))
+                                                .font(.headline)
+                                                .padding(.horizontal)
+
+                                            // Transactions for that day
+                                            ForEach(group.transactions, id: \.id) { transaction in
+                                                transactionListItem(transaction)
+                                            }
+                                        }
                                     }
                                 }
                             }

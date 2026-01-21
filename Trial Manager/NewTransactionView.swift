@@ -17,6 +17,7 @@ struct NewTransactionView: View {
     @State var transactionSymbol: String = "creditcard"
     @State var showSymbolSelector: Bool = false
     @State var newTransactionColor: Color = .blue
+    @Binding var userData: UserData
     @Environment(\.dismiss) var dismiss
     var body: some View {
         GeometryReader { reader in
@@ -119,7 +120,8 @@ struct NewTransactionView: View {
                         .glassEffect()
                         
                         Button {
-                            
+                            userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType))
+                            dismiss()
                         } label: {
                             Spacer()
                             Image(systemName: "book.badge.plus")
@@ -146,7 +148,7 @@ struct NewTransactionView: View {
         }
     }
 }
-
-#Preview {
-    NewTransactionView()
-}
+//
+//#Preview {
+//    NewTransactionView()
+//}

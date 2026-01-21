@@ -18,6 +18,8 @@ struct WelcomeView: View {
     @State var moneyMadeInThatTime: Double = 1000.0
     @State var dayMoneyIsRecieved: DayOfIncomeArrival? = nil
     @State var incomeArrivalTimeForMonthlyIncome: IncomeArrivalTimeForMonthlyIncome? = nil
+    @Binding var userData: UserData
+    @State var authorizationGrantStatusForNotifications: Bool = false
         
     let locale = Locale.current
 
@@ -90,6 +92,7 @@ struct WelcomeView: View {
                                 .adaptiveProminentButtonStyle()
                             } else {
                                 Button {
+                                    userData = UserData(name: userName, dailyNotificationRingTime: preferedTimeOfNotification, notificationsPermissionGiven: authorizationGrantStatusForNotifications, balance: moneyMadeInThatTime, incomeArrivalTimeForMonthlyIncome: incomeArrivalTimeForMonthlyIncome ?? nil, transactions: [], subscriptions: [])
                                     dismiss()
                                 } label: {
                                     Spacer()
@@ -112,6 +115,6 @@ struct WelcomeView: View {
     }
 }
 
-#Preview {
-    WelcomeView()
-}
+//#Preview {
+//    WelcomeView(userData: <#Binding<UserData>#>)
+//}
