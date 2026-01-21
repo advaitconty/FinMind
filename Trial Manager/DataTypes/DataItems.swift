@@ -75,10 +75,12 @@ enum SubscriptionType: Codable {
 struct Subscription: Codable, Identifiable {
     var id: UUID = UUID()
     var subscriptionName: String
+    var subscriptionIcon: String
     var subscriptionType: SubscriptionType = .monthly
     var price: Double
     var nextCycle: Date
     var freeTrial: Bool = false
+    var freeTrialEndDate: Date?
 }
 
 @Model

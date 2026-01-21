@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 enum SelectedTab: Codable {
-    case home, transactions, receipts, settings, transact
+    case home, transactions, receipts, settings, transact, subscriptions
 }
 
 struct ContentView: View {
@@ -61,6 +61,10 @@ struct ContentView: View {
             
             Tab("Ledger", systemImage: "book.pages", value: .transactions) {
                 TransactionsView(userData: userData)
+            }
+            
+            Tab("Subscriptions", systemImage: "dollarsign.arrow.trianglehead.counterclockwise.rotate.90", value: .subscriptions) {
+                
             }
             
             

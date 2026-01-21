@@ -33,6 +33,7 @@ extension UserData {
         let subscriptions = [
             Subscription(
                 subscriptionName: "Netflix",
+                subscriptionIcon: "play.tv",
                 subscriptionType: .monthly,
                 price: 15.99,
                 nextCycle: Calendar.current.date(byAdding: .month, value: 1, to: Date())!,
@@ -40,6 +41,7 @@ extension UserData {
             ),
             Subscription(
                 subscriptionName: "Spotify",
+                subscriptionIcon: "music.note",
                 subscriptionType: .monthly,
                 price: 9.99,
                 nextCycle: Calendar.current.date(byAdding: .day, value: 15, to: Date())!,
@@ -81,6 +83,7 @@ extension UserData {
         let subscriptions = [
             Subscription(
                 subscriptionName: "Gym Membership",
+                subscriptionIcon: "figure.walk",
                 subscriptionType: .monthly,
                 price: 45.00,
                 nextCycle: Calendar.current.date(byAdding: .day, value: 20, to: Date())!,
@@ -88,6 +91,7 @@ extension UserData {
             ),
             Subscription(
                 subscriptionName: "iCloud Storage",
+                subscriptionIcon: "cloud",
                 subscriptionType: .monthly,
                 price: 2.99,
                 nextCycle: Calendar.current.date(byAdding: .day, value: 10, to: Date())!,
@@ -143,6 +147,7 @@ extension UserData {
         let subscriptions = [
             Subscription(
                 subscriptionName: "Adobe Creative Cloud",
+                subscriptionIcon: "paintbrush",
                 subscriptionType: .monthly,
                 price: 54.99,
                 nextCycle: Calendar.current.date(byAdding: .month, value: 1, to: Date())!,
@@ -150,13 +155,16 @@ extension UserData {
             ),
             Subscription(
                 subscriptionName: "ChatGPT Plus",
+                subscriptionIcon: "brain",
                 subscriptionType: .monthly,
                 price: 20.00,
                 nextCycle: Calendar.current.date(byAdding: .day, value: 12, to: Date())!,
-                freeTrial: true
+                freeTrial: true,
+                freeTrialEndDate: Calendar.current.date(byAdding: .day, value: 12, to: Date())!
             ),
             Subscription(
                 subscriptionName: "Dropbox",
+                subscriptionIcon: "folder",
                 subscriptionType: .annually,
                 price: 119.88,
                 nextCycle: Calendar.current.date(byAdding: .month, value: 8, to: Date())!,
@@ -198,6 +206,7 @@ extension UserData {
         let subscriptions = [
             Subscription(
                 subscriptionName: "Spotify Student",
+                subscriptionIcon: "music.note",
                 subscriptionType: .monthly,
                 price: 5.99,
                 nextCycle: Calendar.current.date(byAdding: .month, value: 1, to: Date())!,
@@ -205,10 +214,12 @@ extension UserData {
             ),
             Subscription(
                 subscriptionName: "Apple Music",
+                subscriptionIcon: "music.note.list",
                 subscriptionType: .monthly,
                 price: 5.99,
                 nextCycle: Calendar.current.date(byAdding: .day, value: 5, to: Date())!,
-                freeTrial: true
+                freeTrial: true,
+                freeTrialEndDate: Calendar.current.date(byAdding: .day, value: 5, to: Date())!
             )
         ]
         
@@ -253,6 +264,7 @@ extension UserData {
         let subscriptions = [
             Subscription(
                 subscriptionName: "Mobile Data Plan",
+                subscriptionIcon: "antenna.radiowaves.left.and.right",
                 subscriptionType: .monthly,
                 price: 35.00,
                 nextCycle: Calendar.current.date(byAdding: .day, value: 18, to: Date())!,
