@@ -39,6 +39,7 @@ enum TransactionType: String, Codable, CaseIterable {
     case miscellaneous = "Miscellaneous"
     case paycheck = "Paycheck"
     case sideIncome = "Side Income"
+    case taxes = "Taxes"
     case other = "Other"
 }
 
@@ -72,6 +73,14 @@ enum SubscriptionType: Codable {
     case monthly, annually
 }
 
+enum SubscriptionPriority: String, Codable, CaseIterable {
+    case important = "Important"
+    case entertainment = "Entertainment"
+    case convenience = "Convinence-related service"
+    case required = "Required for work/living"
+    case other = "Other recurring expense"
+}
+
 struct Subscription: Codable, Identifiable {
     var id: UUID = UUID()
     var subscriptionName: String
@@ -81,6 +90,8 @@ struct Subscription: Codable, Identifiable {
     var nextCycle: Date
     var freeTrial: Bool = false
     var freeTrialEndDate: Date?
+    var subscriptionColor: Color = .cyan
+    var wantsReminderwhenFreeTrialExpires: Bool = false
 }
 
 @Model

@@ -14,12 +14,15 @@ import SymbolPicker
 struct NewSubscriptionView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var transactionName: String = ""
-    @State var amountSpent: Double = 0.0
-    @State var moneyEarnt: Bool = false
-    @State var transactionType: TransactionType = .essential
-    @State var transactionSymbol: String = "creditcard"
+    @State var moneyCharged: Double = 0.0
+    @State var freeTrial: Bool = false
+    @State var freeTrialEndDate: Date = Date()
+    @State var subscriptionPriority: SubscriptionPriority = .important
+    @State var subscriptionSymbol: String = "dollarsign.arrow.trianglehead.counterclockwise.rotate.90"
+    @State var subscriptionType: SubscriptionType = .monthly
     @State var showSymbolSelector: Bool = false
-    @State var newTransactionColor: Color = .blue
+    @State var subscriptionColor: Color = .blue
+    @State var wantsFreeTrialEndingReminder: Bool = true
     @Binding var userData: UserData
     @Environment(\.dismiss) var dismiss
     var body: some View {
@@ -28,13 +31,13 @@ struct NewSubscriptionView: View {
                 Color.accentColor.opacity(0.2)
                 VStack(spacing: 0) {
                     HStack {
-                        Image(systemName: transactionSymbol)
+                        Image(systemName: subscriptionSymbol)
                             .onTapGesture {
                                 showSymbolSelector = true
                             }
                             .foregroundStyle(.white)
                         
-                        Text(transactionName.isEmpty ? "New Transaction" : transactionName)
+                        Text(transactionName.isEmpty ? "New Subscription" : transactionName)
                             .font(.title)
                             .foregroundStyle(.white)
                         Spacer()
@@ -44,7 +47,7 @@ struct NewSubscriptionView: View {
                             Image(systemName: "xmark")
                                 .foregroundStyle(.white)
                         }
-                        .adaptiveButtonStyle()
+                        .adaptiveProminentButtonStyle()
                     }
                     .padding()
                     .frame(minWidth: reader.size.width - 20)
@@ -53,35 +56,71 @@ struct NewSubscriptionView: View {
                     VStack {
                         HStack {
                             Text("Name:")
-                            TextField("Groceries...", text: $transactionName)
+                            TextField("YouTube Premium...", text: $transactionName)
                         }
                         .padding()
                         .glassEffect()
                         
                         HStack {
-                            Text("Amount:")
-                            TextField("Groceries...", value: $amountSpent, format: .currency(code: "SGD"))
+                            Text("Charge per cycle:")
+                            TextField("Groceries...", value: $moneyCharged, format: .currency(code: "SGD"))
                         }
                         .padding()
                         .glassEffect()
                         
-                        Picker("", selection: $moneyEarnt) {
-                            HStack {
-                                Text("Expense")
+                        HStack {
+                            Picker("", selection: $subscriptionType) {
+                                Text("Annual")
+                                    .tag(SubscriptionType.annually)
+                                Text("Monthly")
+                                    .tag(SubscriptionType.monthly)
                             }
-                            .tag(false)
-                            HStack {
-                                Text("Income")
-                            }
-                            .tag(true)
+                            .pickerStyle(.segmented)
                         }
-                        .pickerStyle(.segmented)
                         
                         HStack {
-                            Text("Transaction Type")
+                            Text("Includes free trial")
                             Spacer()
-                            Picker("Transaction Type", selection: $transactionType) {
-                                ForEach(TransactionType.pickerOptions(isIncomeMode: moneyEarnt), id: \.self) {
+                            Toggle("", isOn: $freeTrial)
+                        }
+                        .padding()
+                        .glassEffect()
+                        
+                        if freeTrial {
+                            HStack {
+                                Text("Free trial end date")
+                                Spacer()
+                                DatePicker("", selection: $freeTrialEndDate, in: Calendar.current.date(byAdding: .day, value: 1, to: Date())!..., displayedComponents: .date)
+                            }
+                            .padding()
+                            .glassEffect()
+                            
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Text("Free trial end reminder")
+                                    Spacer()
+                                    Toggle("", isOn: $wantsFreeTrialEndingReminder)
+                                        .labelsHidden()
+                                }
+                                Text("Enabling this will give you a notification 1 day before the free trial period ends. \(!userData.notificationsPermissionGiven ? "You cannot enable this as notification permissions have not been given." : "" )")
+                                    .italic()
+                                    .font(.caption)
+                                    .onAppear {
+                                        if !userData.notificationsPermissionGiven {
+                                            wantsFreeTrialEndingReminder = false
+                                        }
+                                    }
+                            }
+                            .disabled(!userData.notificationsPermissionGiven)
+                            .padding()
+                            .glassEffect()
+                        }
+                        
+                        HStack {
+                            Text("Subscription Type")
+                            Spacer()
+                            Picker("Subscription Type", selection: $subscriptionPriority) {
+                                ForEach(SubscriptionPriority.allCases, id: \.self) {
                                     Text($0.rawValue)
                                         .tag($0)
                                 }
@@ -93,39 +132,39 @@ struct NewSubscriptionView: View {
                         .glassEffect()
                         
                         HStack {
-                            Text("Icon background color")
-                            Spacer()
-                            ColorPicker("", selection: $newTransactionColor)
-                        }
-                        .padding()
-                        .glassEffect()
-                        
-                        HStack {
-                            Text("Transaction Icon")
-                            Spacer()
-                            Button {
-                                showSymbolSelector = true
-                            } label: {
-                                Image(systemName: transactionSymbol)
+                            HStack {
+                                Text("Icon background color")
+                                ColorPicker("", selection: $subscriptionColor)
+                                    .labelsHidden()
                             }
-                            .adaptiveProminentButtonStyle()
-                            .tint(newTransactionColor)
+                            .padding()
+                            .glassEffect()
+                            
+                            HStack {
+                                Text("Subscription icon")
+                                Spacer()
+                                Button {
+                                    showSymbolSelector = true
+                                } label: {
+                                    Image(systemName: subscriptionSymbol)
+                                }
+                                .adaptiveProminentButtonStyle()
+                                .tint(subscriptionColor)
+                            }
+                            .padding()
+                            .glassEffect()
                         }
-                        .padding()
-                        .glassEffect()
                         
                         Button {
-                            userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType, additionToBankAccount: moneyEarnt))
-                            if moneyEarnt {
-                                userData.balance += amountSpent
+                            if userData.notificationsPermissionGiven {
+                                dismiss()
                             } else {
-                                userData.balance -= amountSpent
+                                
                             }
-                            dismiss()
                         } label: {
                             Spacer()
-                            Image(systemName: "book.badge.plus")
-                            Text("Add transaction")
+                            Image(systemName: "bag.badge.plus")
+                            Text("Add Subscription")
                             Spacer()
                         }
                         .adaptiveProminentButtonStyle()
@@ -139,7 +178,7 @@ struct NewSubscriptionView: View {
                 .padding()
                 .frame(maxWidth: reader.size.width - 20, maxHeight: reader.size.height)
                 .fullScreenCover(isPresented: $showSymbolSelector) {
-                    SymbolPicker(symbol: $transactionSymbol)
+                    SymbolPicker(symbol: $subscriptionSymbol)
                 }
                 
             }

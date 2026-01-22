@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F11FCCBA2F1E90A600DA5253 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = F11FCCB92F1E90A600DA5253 /* SymbolPicker */; };
 		F16BBEAC2F212A0900BC7B93 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = F16BBEAB2F212A0900BC7B93 /* SymbolPicker */; };
+		F16BBEAF2F212A5800BC7B93 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = F16BBEAE2F212A5800BC7B93 /* SymbolPicker */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			files = (
 				F16BBEAC2F212A0900BC7B93 /* SymbolPicker in Frameworks */,
 				F11FCCBA2F1E90A600DA5253 /* SymbolPicker in Frameworks */,
+				F16BBEAF2F212A5800BC7B93 /* SymbolPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				F11FCCB92F1E90A600DA5253 /* SymbolPicker */,
 				F16BBEAB2F212A0900BC7B93 /* SymbolPicker */,
+				F16BBEAE2F212A5800BC7B93 /* SymbolPicker */,
 			);
 			productName = "Trial Manager";
 			productReference = F14EF4222EF6A45F004D0E93 /* Trial Manager.app */;
@@ -104,7 +107,7 @@
 			mainGroup = F14EF4192EF6A45F004D0E93;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F16BBEAA2F212A0900BC7B93 /* XCLocalSwiftPackageReference "../SymbolPicker" */,
+				F16BBEAD2F212A5800BC7B93 /* XCLocalSwiftPackageReference "../SymbolPicker" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F14EF4232EF6A45F004D0E93 /* Products */;
@@ -352,7 +355,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F16BBEAA2F212A0900BC7B93 /* XCLocalSwiftPackageReference "../SymbolPicker" */ = {
+		F16BBEAD2F212A5800BC7B93 /* XCLocalSwiftPackageReference "../SymbolPicker" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SymbolPicker;
 		};
@@ -364,6 +367,10 @@
 			productName = SymbolPicker;
 		};
 		F16BBEAB2F212A0900BC7B93 /* SymbolPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SymbolPicker;
+		};
+		F16BBEAE2F212A5800BC7B93 /* SymbolPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SymbolPicker;
 		};

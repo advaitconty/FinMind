@@ -175,7 +175,7 @@ extension UserData {
         return UserData(
             name: "Alex Rivera",
             dailyNotificationRingTime: Calendar.current.date(from: DateComponents(hour: 10, minute: 0))!,
-            notificationsPermissionGiven: true,
+            notificationsPermissionGiven: false,
             recurringIncomeType: .inconsistent,
             recurringIncomeAmount: nil,
             incomeArrivalTimeForMonthlyIncome: .monthStart,
