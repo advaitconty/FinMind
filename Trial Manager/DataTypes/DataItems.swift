@@ -102,6 +102,8 @@ class UserData {
     var balance: Double = 0.0
     var lastAddedIncomeTime: Date = Date()
     
+    var nextIncomeTime: Date = Date()
+    
     // Reccuring income settings
     var recurringIncomeType: MoneyEarnRecurringSchedule?
     var recurringIncomeAmount: Double?

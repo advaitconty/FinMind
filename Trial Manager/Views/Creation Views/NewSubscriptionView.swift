@@ -95,13 +95,17 @@ struct NewSubscriptionView: View {
                             .padding()
                             .glassEffect()
                             
-                            VStack(alignment: .leading) {
                                 HStack {
                                     Text("Free trial end reminder")
                                     Spacer()
                                     Toggle("", isOn: $wantsFreeTrialEndingReminder)
                                         .labelsHidden()
                                 }
+                    .disabled(!userData.notificationsPermissionGiven)
+                    .padding()
+                    .glassEffect()
+                            
+                            VStack(alignment: .leading) {
                                 Text("Enabling this will give you a notification 1 day before the free trial period ends. \(!userData.notificationsPermissionGiven ? "You cannot enable this as notification permissions have not been given." : "" )")
                                     .italic()
                                     .font(.caption)
@@ -110,8 +114,8 @@ struct NewSubscriptionView: View {
                                             wantsFreeTrialEndingReminder = false
                                         }
                                     }
+                                
                             }
-                            .disabled(!userData.notificationsPermissionGiven)
                             .padding()
                             .glassEffect()
                         }

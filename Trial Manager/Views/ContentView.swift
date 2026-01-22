@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 enum SelectedTab: Codable {
     case home, transactions, receipts, settings, transact, subscriptions
@@ -18,6 +19,7 @@ struct ContentView: View {
     @AppStorage("showSetupScreen") var showSetupScreen: Bool = true
     @Environment(\.modelContext) var modelContext
     @Query var swiftDataUserData: [UserData]
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var userData: Binding<UserData> {
         Binding {
             if !swiftDataUserData.isEmpty {
@@ -64,6 +66,7 @@ struct ContentView: View {
             }
             
             Tab("Subscriptions", systemImage: "dollarsign.arrow.trianglehead.counterclockwise.rotate.90", value: .subscriptions) {
+                SubscriptionsView(userData: userData)
                 
             }
             
@@ -74,6 +77,30 @@ struct ContentView: View {
         }
         .fullScreenCover(isPresented: $showSetupScreen) {
             WelcomeView(userData: userData)
+        }
+        .onReceive(timer) { _ in
+            for (subscriptionIndex, subscription) in userData.wrappedValue.subscriptions.enumerated() {
+                if Calendar.current.isDateInToday(subscription.nextCycle) || subscription.nextCycle < Date() {
+                    userData.wrappedValue.transactions.append(Transaction(transactionName: "Subscription: \(subscription.subscriptionName)", transactionAmount: subscription.price))
+                    
+                    if subscription.subscriptionType == .annually {
+                        userData.wrappedValue.subscriptions[subscriptionIndex].nextCycle = Calendar.current.date(byAdding: .year, value: 1, to: subscription.nextCycle) ?? Date()
+                    } else if subscription.subscriptionType == .monthly {
+                        userData.wrappedValue.subscriptions[subscriptionIndex].nextCycle = Calendar.current.date(byAdding: .month, value: 1, to: subscription.nextCycle) ?? Date()
+                    }
+                }
+            }
+            
+            if (userData.wrappedValue.nextIncomeTime < Date() || Calendar.current.isDateInToday(userData.wrappedValue.nextIncomeTime)) && (userData.wrappedValue.recurringIncomeType != .inconsistent || userData.wrappedValue.recurringIncomeType != MoneyEarnRecurringSchedule.none){
+                userData.wrappedValue.balance += userData.wrappedValue.recurringIncomeAmount!
+                if userData.wrappedValue.recurringIncomeType == .day {
+                    userData.wrappedValue.nextIncomeTime = Calendar.current.date(byAdding: .day, value: 1, to: userData.wrappedValue.nextIncomeTime) ?? Date()
+                } else if userData.wrappedValue.recurringIncomeType == .week {
+                    userData.wrappedValue.nextIncomeTime = Calendar.current.date(byAdding: .day, value: 7, to: userData.wrappedValue.nextIncomeTime) ?? Date()
+                }
+                // MARK: Try to fix and make it work when user doesn't log in for multiple days
+                // MARK: To finish: monthly logic
+            }
         }
     }
 }
