@@ -69,8 +69,9 @@ struct Transaction: Codable, Identifiable {
     var additionToBankAccount: Bool = false
 }
 
-enum SubscriptionType: Codable {
-    case monthly, annually
+enum SubscriptionType: String, Codable {
+    case monthly = "month"
+    case annually = "year"
 }
 
 enum SubscriptionPriority: String, Codable, CaseIterable {

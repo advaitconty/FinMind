@@ -16,7 +16,7 @@ enum SelectedTab: Codable {
 
 struct ContentView: View {
     @State var selectedTab: SelectedTab = .home
-    @AppStorage("showSetupScreen") var showSetupScreen: Bool = true
+    @AppStorage("showSetupScreen") var showSetupScreen: Bool = true // CHANGE TO TRUE WHEN RELEASING
     @Environment(\.modelContext) var modelContext
     @Query var swiftDataUserData: [UserData]
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -120,9 +120,11 @@ struct ContentView: View {
             }
             
             
-            Tab("Settings", systemImage: "gearshape.2", value: .settings) {
-                Text("Settings")
-            }
+//            if getInfoToShowView() {
+//                Tab("Summary", systemImage: "list.bullet.rectangle", value: .settings) {
+//                    Text("Settings")
+//                }
+//            }
         }
         .fullScreenCover(isPresented: $showSetupScreen) {
             WelcomeView(userData: userData)
