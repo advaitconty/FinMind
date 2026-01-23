@@ -20,6 +20,55 @@ struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @Query var swiftDataUserData: [UserData]
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    // MARK: Random date generator
+    func randomDate(year: Int, month: Int, dayRange: ClosedRange<Int>, calendar: Calendar = .current) -> Date? {
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = .random(in: dayRange)
+        components.hour = 9
+        return calendar.date(from: components)
+    }
+    
+    // MARK: next date generator
+    func nextMonthlyIncomeDate(
+        after date: Date,
+        window: IncomeArrivalTimeForMonthlyIncome,
+        calendar: Calendar = .current
+    ) -> Date {
+        let base = calendar.dateComponents([.year, .month], from: date)
+        
+        switch window {
+        case .monthEarlyEnd:
+            return randomDate(
+                year: base.year!,
+                month: base.month!,
+                dayRange: 20...25,
+                calendar: calendar
+            )!
+            
+        case .monthLateEnd:
+            return randomDate(
+                year: base.year!,
+                month: base.month!,
+                dayRange: 26...31,
+                calendar: calendar
+            )!
+            
+        case .monthStart:
+            let nextMonth = calendar.date(byAdding: .month, value: 1, to: date)!
+            let comps = calendar.dateComponents([.year, .month], from: nextMonth)
+            return randomDate(
+                year: comps.year!,
+                month: comps.month!,
+                dayRange: 1...5,
+                calendar: calendar
+            )!
+        }
+    }
+    
+    
     var userData: Binding<UserData> {
         Binding {
             if !swiftDataUserData.isEmpty {
@@ -91,15 +140,22 @@ struct ContentView: View {
                 }
             }
             
-            if (userData.wrappedValue.nextIncomeTime < Date() || Calendar.current.isDateInToday(userData.wrappedValue.nextIncomeTime)) && (userData.wrappedValue.recurringIncomeType != .inconsistent || userData.wrappedValue.recurringIncomeType != MoneyEarnRecurringSchedule.none){
+            guard let amount = userData.wrappedValue.recurringIncomeAmount, userData.wrappedValue.recurringIncomeType != .inconsistent else { return }
+            
+            let calendar = Calendar.current
+            let now = Date()
+            
+            while userData.wrappedValue.nextIncomeTime <= now {
                 userData.wrappedValue.balance += userData.wrappedValue.recurringIncomeAmount!
+                userData.wrappedValue.lastAddedIncomeTime = userData.wrappedValue.nextIncomeTime
+                
                 if userData.wrappedValue.recurringIncomeType == .day {
-                    userData.wrappedValue.nextIncomeTime = Calendar.current.date(byAdding: .day, value: 1, to: userData.wrappedValue.nextIncomeTime) ?? Date()
+                    calendar.date(byAdding: .day, value: 1, to: userData.wrappedValue.nextIncomeTime)!
                 } else if userData.wrappedValue.recurringIncomeType == .week {
-                    userData.wrappedValue.nextIncomeTime = Calendar.current.date(byAdding: .day, value: 7, to: userData.wrappedValue.nextIncomeTime) ?? Date()
+                    userData.wrappedValue.nextIncomeTime = calendar.date(byAdding: .weekOfYear, value: 1, to: userData.wrappedValue.nextIncomeTime)!
+                } else if userData.wrappedValue.recurringIncomeType == .month {
+                    userData.wrappedValue.nextIncomeTime = nextMonthlyIncomeDate(after: userData.wrappedValue.nextIncomeTime, window: userData.wrappedValue.incomeArrivalTimeForMonthlyIncome!)
                 }
-                // MARK: Try to fix and make it work when user doesn't log in for multiple days
-                // MARK: To finish: monthly logic
             }
         }
     }
