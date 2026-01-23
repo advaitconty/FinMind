@@ -11,20 +11,26 @@ import Foundation
 extension AIView {
     func sendMessage() {
         Task {
-            conversationHistory.append(ConversationItem(personResponding: .person, text: enteredText))
             generatingContent = true
-            
+            liveGeneratingResponseText = ""
             do {
                 let prompt = enteredText
                 enteredText = ""
                 let stream = session.streamResponse(to: prompt)
-                conversationHistory.append(ConversationItem(personResponding: .ai, text: ""))
                 for try await response in stream {
-                    conversationHistory[0].text = response.content
+                    // Show partial content while streaming; transcript observer will update the chat when complete
+                    liveGeneratingResponseText = response.content
                 }
+                generatingContent = false
+                liveGeneratingResponseText = ""
             } catch let error as LanguageModelSession.GenerationError {
                 print(error.localizedDescription)
                 errorText = error.localizedDescription
+                generatingContent = false
+            } catch {
+                print(error.localizedDescription)
+                errorText = error.localizedDescription
+                generatingContent = false
             }
         }
     }

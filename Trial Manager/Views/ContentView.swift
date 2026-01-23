@@ -120,11 +120,11 @@ struct ContentView: View {
             }
             
             
-//            if getInfoToShowView() {
-//                Tab("Summary", systemImage: "list.bullet.rectangle", value: .settings) {
-//                    Text("Settings")
-//                }
-//            }
+            if getInfoToShowView() {
+                Tab("Summary", systemImage: "list.bullet.rectangle", value: .settings) {
+                    AIView(userData: userData)
+                }
+            }
         }
         .fullScreenCover(isPresented: $showSetupScreen) {
             WelcomeView(userData: userData)

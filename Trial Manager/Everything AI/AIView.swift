@@ -26,6 +26,36 @@ struct AIView: View {
     @State var generatingContent: Bool = false
     let debug: Bool = true
     
+    // Map session transcript -> conversation items (user prompts and AI responses only)
+    private func rebuildConversationFromTranscript() {
+        let entries = session.transcript
+        var items: [ConversationItem] = []
+        for entry in entries {
+            switch entry {
+            case .prompt(let prompt):
+                let text = prompt.segments.compactMap { segment -> String? in
+                    if case let .text(textSegment) = segment { return textSegment.content }
+                    return nil
+                }.joined()
+                if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    items.append(ConversationItem(personResponding: .person, text: text))
+                }
+            case .response(let response):
+                let text = response.segments.compactMap { segment -> String? in
+                    if case let .text(textSegment) = segment { return textSegment.content }
+                    return nil
+                }.joined()
+                if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    items.append(ConversationItem(personResponding: .ai, text: text))
+                }
+            default:
+                // Ignore instructions, tool calls, and tool outputs for chat display
+                break
+            }
+        }
+        conversationHistory = items
+    }
+    
     func warningPopupView(reader: GeometryProxy) -> some View {
         ZStack {
             Color.accentColor.opacity(0.2)
@@ -158,11 +188,22 @@ struct AIView: View {
                 }
                 .onAppear {
                     proxy.scrollTo("BOTTOM", anchor: .bottom)
-                    if debug {
-                        conversationHistory = Array.conversation5_savingsGoal
+                    // Initialize from transcript if available, otherwise show debug or empty
+                    if session.transcript.isEmpty {
+                        if debug {
+                            conversationHistory = Array.conversation5_savingsGoal
+                        } else {
+                            conversationHistory = []
+                        }
+                    } else {
+                        rebuildConversationFromTranscript()
                     }
                 }
                 .onChange(of: conversationHistory.count) {
+                    proxy.scrollTo("BOTTOM", anchor: .bottom)
+                }
+                .onChange(of: session.transcript) { _ in
+                    rebuildConversationFromTranscript()
                     proxy.scrollTo("BOTTOM", anchor: .bottom)
                 }
             }
@@ -278,6 +319,14 @@ struct AIView: View {
                 .frame(maxWidth: reader.size.width - 20, maxHeight: reader.size.height)
             }
             .ignoresSafeArea()
+            .onAppear {
+                session = LanguageModelSession(tools: [GetUserProfileTool(userData: userData),
+                                                       AnalyseRecentTransactionsTool(userData: userData),
+                                                       AnalyseSubscriptionTool(userData: userData),
+                                                       GetSpendingInsightsTotalTool(userData: userData)]) {
+                    basePrompt
+                }
+            }
         }
     }
 }
