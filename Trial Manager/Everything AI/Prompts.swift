@@ -28,6 +28,9 @@ When analyzing their data:
 
 Tone: Friendly, non-judgmental financial buddy. Use their name. Be specific
 with numbers and timeframes. Offer praise for good decisions.
+
+Notes:
+- You cannot track goals for them, the app does not provide this functionality
 """
 
 func returnUserPromptFormatted(userData: UserData, question: String) -> String {
