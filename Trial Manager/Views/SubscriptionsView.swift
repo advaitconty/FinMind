@@ -11,6 +11,7 @@ struct SubscriptionsView: View {
     @Binding var userData: UserData
     @Environment(\.colorScheme) var colorScheme
     @State var searchTerm: String = ""
+    @Environment(\.dismiss) var dismiss
     @State var selectedSubscription: Subscription? = nil
     
     func subscriptionItem(_ subscription: Subscription) -> some View {
@@ -69,6 +70,12 @@ struct SubscriptionsView: View {
                             .font(.title2)
                     }
                     Spacer()
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .adaptiveProminentButtonStyle()
                 }
                 HStack {
                     if subscription.freeTrial {
@@ -112,6 +119,9 @@ struct SubscriptionsView: View {
             .padding()
             .presentationDetents([.fraction(0.3)])
             
+        }
+        .onTapGesture {
+            selectedSubscription = subscription
         }
     }
     

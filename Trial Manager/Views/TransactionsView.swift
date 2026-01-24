@@ -11,6 +11,8 @@ struct TransactionsView: View {
     @Binding var userData: UserData
     @Environment(\.colorScheme) var colorScheme
     @State var searchText: String = ""
+    @State var selectedTransaction: Transaction? = nil
+    @Environment(\.dismiss) var dismiss
     
     var filteredTransactions: [Transaction] {
         if searchText.isEmpty {
@@ -49,7 +51,7 @@ struct TransactionsView: View {
     
     func transactionListItem(_ transaction: Transaction) -> some View {
         Button {
-//            openedTransaction = transaction
+            selectedTransaction = transaction
         } label: {
             HStack(spacing: 10) {
                 Image(systemName: transaction.transactionIcon)
@@ -154,6 +156,52 @@ struct TransactionsView: View {
                 .frame(maxWidth: reader.size.width - 20, maxHeight: reader.size.height)
             }
             .ignoresSafeArea()
+            .sheet(item: $selectedTransaction) { transaction in
+                VStack(alignment: .leading) {
+                    HStack {
+                        Image(systemName: transaction.transactionIcon)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .background {
+                                Circle()
+                                    .fill(transaction.iconBackgroundColor)
+                            }
+                            .frame(width: 50, height: 50)
+                        VStack(alignment: .leading) {
+                            Text(transaction.transactionName)
+                                .font(.title2)
+                        }
+                        Spacer()
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                        .adaptiveProminentButtonStyle()
+                    }
+                    HStack {
+                        Text("Spent \(String(format: "%.2f", transaction.transactionAmount)), which was a \(transaction.transactionCategory.rawValue) transaction.")
+                    }
+                    Button {
+                        for transactionthing in userData.transactions {
+                            if transaction.id == transactionthing.id {
+                                userData.balance -= transaction.transactionAmount
+                                userData.transactions.removeAll(where: { $0.id == transaction.id })
+                            }
+                        }
+                    } label: {
+                        Spacer()
+                        Image(systemName: "xmark.circle")
+                        Text("Delete Transaction")
+                        Spacer()
+                    }
+                    .adaptiveProminentButtonStyle()
+                }
+                .padding()
+                .presentationDetents([.fraction(0.3)])
+                
+            }
+
         }
     }
 }
