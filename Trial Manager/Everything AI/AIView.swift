@@ -20,8 +20,8 @@ struct AIView: View {
     @State var modelAvailability: AIAvailabilityInformation? = nil
     @AppStorage("warning") var showWarningPopup: Bool = true
     @Environment(\.colorScheme) var colorScheme
-    @Forever("conversationHistory") var conversationHistory: [ConversationItem] = []
-    @State var enteredText: String = "i"
+    @State var conversationHistory: [ConversationItem] = []
+    @State var enteredText: String = ""
     @State var showSendButton: Bool = true
     @State var generatingContent: Bool = false
     let debug: Bool = true
@@ -176,8 +176,6 @@ struct AIView: View {
                                 Text("Generating response...")
                                     .frame(maxWidth: .infinity, alignment: .init(horizontal: .leading, vertical: .top))
                             }
-                            Text(liveGeneratingResponseText)
-                                .frame(maxWidth: .infinity, alignment: .init(horizontal: .leading, vertical: .top))
                         }
                         .padding()
                         .background(Color.accentColor.opacity(0.2))
@@ -202,7 +200,7 @@ struct AIView: View {
                 .onChange(of: conversationHistory.count) {
                     proxy.scrollTo("BOTTOM", anchor: .bottom)
                 }
-                .onChange(of: session.transcript) { _ in
+                .onChange(of: session.transcript) {
                     rebuildConversationFromTranscript()
                     proxy.scrollTo("BOTTOM", anchor: .bottom)
                 }
@@ -227,7 +225,7 @@ struct AIView: View {
                 TextField("Ask something...", text: $enteredText)
                     .padding()
                     .glassEffect()
-                    .onChange(of: enteredText) { newValue in
+                    .onChange(of: enteredText) {
                         if enteredText.isEmpty {
                             withAnimation {
                                 showSendButton = false

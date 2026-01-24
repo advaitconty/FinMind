@@ -11,6 +11,7 @@ struct SubscriptionsView: View {
     @Binding var userData: UserData
     @Environment(\.colorScheme) var colorScheme
     @State var searchTerm: String = ""
+    @State var selectedSubscription: Subscription? = nil
     
     func subscriptionItem(_ subscription: Subscription) -> some View {
         HStack {
@@ -30,7 +31,7 @@ struct SubscriptionsView: View {
                         .font(.caption)
                         .italic()
                 } else {
-                    Text("Next renewal at \(subscription.nextCycle.formatted(date: .numeric, time: .omitted) ?? "N/A")")
+                    Text("Next renewal at \(subscription.nextCycle.formatted(date: .numeric, time: .omitted))")
                         .font(.footnote)
                         .italic()
                 }
@@ -48,10 +49,70 @@ struct SubscriptionsView: View {
                         .italic()
                 }
             }
-                
+            
         }
         .padding()
         .glassEffect()
+        .sheet(item: $selectedSubscription) { subscriptionItem in
+            VStack(alignment: .leading) {
+                HStack {
+                    Image(systemName: subscription.subscriptionIcon)
+                        .foregroundStyle(.white)
+                        .padding()
+                        .background {
+                            Circle()
+                                .fill(Color.accent)
+                        }
+                        .frame(width: 50, height: 50)
+                    VStack(alignment: .leading) {
+                        Text(subscription.subscriptionName)
+                            .font(.title2)
+                    }
+                    Spacer()
+                }
+                HStack {
+                    if subscription.freeTrial {
+                        Text("Free trial - Ends on \(subscription.freeTrialEndDate?.formatted(date: .numeric, time: .omitted) ?? "N/A")")
+                            .font(.caption)
+                            .italic()
+                    } else {
+                        Text("Next renewal at \(subscription.nextCycle.formatted(date: .numeric, time: .omitted))")
+                            .font(.body)
+                    }
+                    Spacer()
+                    VStack {
+                        Text(subscription.price, format: .currency(code: "USD"))
+                        
+                        if subscription.subscriptionType == .annually {
+                            
+                            Text("per year")
+                                .font(.caption)
+                                .italic()
+                        } else if subscription.subscriptionType == .monthly {
+                            Text("per month")
+                                .font(.caption)
+                                .italic()
+                        }
+                    }
+                }
+                Button {
+                    for subscription in userData.subscriptions {
+                        if subscription.id == subscriptionItem.id {
+                            userData.subscriptions.removeAll(where: { $0.id == subscription.id })
+                        }
+                    }
+                } label: {
+                    Spacer()
+                    Image(systemName: "xmark.circle")
+                    Text("Cancel Subscription")
+                    Spacer()
+                }
+                .adaptiveProminentButtonStyle()
+            }
+            .padding()
+            .presentationDetents([.fraction(0.3)])
+            
+        }
     }
     
     var body: some View {
