@@ -29,6 +29,34 @@ extension WelcomeView {
             DatePicker("", selection: $preferedTimeOfNotification, displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
                 .labelsHidden()
+            
+            if authorizationGrantStatusForNotifications == false {
+                VStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.multicolor)
+                    Text("Notifications have not been enabled. You will not get these notifications until you enable them in the Settings app.")
+                }
+            }   
+            
+            Button {
+                let center = UNUserNotificationCenter.current()
+
+                let content = UNMutableNotificationContent()
+                content.title = "Daily reminder!"
+                content.body = "Time to update your transactions and subscriptions for the day!"
+                content.sound = UNNotificationSound.default
+                
+                let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: preferedTimeOfNotification)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+                
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                
+                center.add(request)
+            } label: {
+                Spacer()
+                Image(systemName: "tick")
+                Text("Set notification timing")
+            }
         }
         .onAppear {
             Task {
