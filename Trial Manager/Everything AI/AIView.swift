@@ -197,7 +197,7 @@ struct AIView: View {
                         rebuildConversationFromTranscript()
                     }
                 }
-                .onChange(of: conversationHistory.count) {
+                .onChange(of: conversationHistory.last) {
                     proxy.scrollTo("BOTTOM", anchor: .bottom)
                 }
                 .onChange(of: session.transcript) {

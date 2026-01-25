@@ -19,11 +19,14 @@ struct NewSubscriptionView: View {
     @State var freeTrialEndDate: Date = Date()
     @State var subscriptionPriority: SubscriptionPriority = .important
     @State var subscriptionSymbol: String = "dollarsign.arrow.trianglehead.counterclockwise.rotate.90"
+    @State var noNotificationsGiven: Bool = false
     @State var subscriptionType: SubscriptionType = .monthly
     @State var showSymbolSelector: Bool = false
     @State var subscriptionColor: Color = .blue
     @State var wantsFreeTrialEndingReminder: Bool = true
     @Binding var userData: UserData
+    @State var incompleteInformationError: Bool = false
+    @Environment(\.openURL) var openURL
     @Environment(\.dismiss) var dismiss
     var body: some View {
         GeometryReader { reader in
@@ -95,15 +98,15 @@ struct NewSubscriptionView: View {
                             .padding()
                             .glassEffect()
                             
-                                HStack {
-                                    Text("Free trial end reminder")
-                                    Spacer()
-                                    Toggle("", isOn: $wantsFreeTrialEndingReminder)
-                                        .labelsHidden()
-                                }
-                    .disabled(!userData.notificationsPermissionGiven)
-                    .padding()
-                    .glassEffect()
+                            HStack {
+                                Text("Free trial end reminder")
+                                Spacer()
+                                Toggle("", isOn: $wantsFreeTrialEndingReminder)
+                                    .labelsHidden()
+                            }
+                            .disabled(!userData.notificationsPermissionGiven)
+                            .padding()
+                            .glassEffect()
                             
                             VStack(alignment: .leading) {
                                 Text("Enabling this will give you a notification 1 day before the free trial period ends. \(!userData.notificationsPermissionGiven ? "You cannot enable this as notification permissions have not been given." : "" )")
@@ -160,10 +163,62 @@ struct NewSubscriptionView: View {
                         }
                         
                         Button {
-                            if userData.notificationsPermissionGiven {
+                            let calender = Calendar.current
+                            if !transactionName.isEmpty && moneyCharged != 0.0 || (freeTrial && freeTrialEndDate == Date() && !transactionName.isEmpty && moneyCharged != 0.0) {
+                                if freeTrial {
+                                    if wantsFreeTrialEndingReminder {
+                                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                                            if success {
+                                                userData.notificationsPermissionGiven = true
+                                                
+                                                let content = UNMutableNotificationContent()
+                                                content.title = "Free trial for \(transactionName) ends in 1 day"
+                                                content.subtitle = "Please cancel it in time (and from FinMinder) to ensure you do not incur any unintended charges, unless you plan on continuing the subscription."
+                                                content.sound = .default
+                                                
+                                                guard let dayBefore = calender.date(byAdding: .day,value: -1, to: freeTrialEndDate) else { return }
+                                                
+                                                var components = calender.dateComponents(
+                                                    [.year, .month, .day], from: dayBefore)
+                                                
+                                                components.hour = 15
+                                                components.minute = 0
+                                                components.second = 30
+                                                
+                                                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                                                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                                                
+                                                UNUserNotificationCenter.current().add(request)
+                                                
+                                                if subscriptionType == .annually {
+                                                    userData.subscriptions.append(Subscription(subscriptionName: transactionName, subscriptionIcon: subscriptionSymbol, subscriptionType: .annually, price: moneyCharged, nextCycle: freeTrialEndDate, freeTrial: true, freeTrialEndDate: freeTrialEndDate, subscriptionColor: subscriptionColor, wantsReminderwhenFreeTrialExpires: true, subscriptionPriority: subscriptionPriority))
+                                                } else {
+                                                    userData.subscriptions.append(Subscription(subscriptionName: transactionName, subscriptionIcon: subscriptionSymbol, subscriptionType: .monthly, price: moneyCharged, nextCycle: freeTrialEndDate, freeTrial: true, freeTrialEndDate: freeTrialEndDate, subscriptionColor: subscriptionColor, wantsReminderwhenFreeTrialExpires: true, subscriptionPriority: subscriptionPriority))
+                                                }
+                                            } else {
+                                                userData.notificationsPermissionGiven = false
+                                                noNotificationsGiven = true
+                                            }
+                                        }
+                                    } else {
+                                        if subscriptionType == .annually {
+                                            userData.subscriptions.append(Subscription(subscriptionName: transactionName, subscriptionIcon: subscriptionSymbol, subscriptionType: .annually, price: moneyCharged, nextCycle: freeTrialEndDate, freeTrial: true, freeTrialEndDate: freeTrialEndDate, subscriptionColor: subscriptionColor, subscriptionPriority: subscriptionPriority))
+                                        } else {
+                                            userData.subscriptions.append(Subscription(subscriptionName: transactionName, subscriptionIcon: subscriptionSymbol, subscriptionType: .monthly, price: moneyCharged, nextCycle: freeTrialEndDate, freeTrial: true, freeTrialEndDate: freeTrialEndDate, subscriptionColor: subscriptionColor, subscriptionPriority: subscriptionPriority))
+                                        }
+                                    }
+                                } else {
+                                    if subscriptionType == .annually {
+                                        let nextCycleDate: Date = calender.date(byAdding: .year, value: 1, to: Date())!
+                                        userData.subscriptions.append(Subscription(subscriptionName: transactionName, subscriptionIcon: subscriptionSymbol, subscriptionType: .annually, price: moneyCharged, nextCycle: nextCycleDate, subscriptionColor: subscriptionColor, subscriptionPriority: subscriptionPriority))
+                                    } else {
+                                        let nextCycleDate: Date = calender.date(byAdding: .month, value: 1, to: Date())!
+                                        userData.subscriptions.append(Subscription(subscriptionName: transactionName, subscriptionIcon: subscriptionSymbol, subscriptionType: .monthly, price: moneyCharged, nextCycle: nextCycleDate, subscriptionColor: subscriptionColor, subscriptionPriority: subscriptionPriority))
+                                    }
+                                }
                                 dismiss()
                             } else {
-                                
+                                incompleteInformationError = true
                             }
                         } label: {
                             Spacer()
@@ -183,6 +238,20 @@ struct NewSubscriptionView: View {
                 .frame(maxWidth: reader.size.width - 20, maxHeight: reader.size.height)
                 .fullScreenCover(isPresented: $showSymbolSelector) {
                     SymbolPicker(symbol: $subscriptionSymbol)
+                }
+                .alert("Incomplete information", isPresented: $incompleteInformationError) {
+                    Text("Please ensure all details are provided before continuing")
+                    Button { } label: { Text("OK") }
+                    
+                }
+                .alert("Cannot show notification for end of free trial", isPresented: $noNotificationsGiven) {
+                    Text("You haven't given this app notification permissions yet. Please enable  it in settings")
+                    Button { } label: { Text("OK") }
+                    Button {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            openURL(url)
+                        }
+                    } label: { Text("Bring me to settings") }
                 }
                 
             }

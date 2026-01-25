@@ -17,6 +17,7 @@ struct NewTransactionView: View {
     @State var transactionSymbol: String = "creditcard"
     @State var showSymbolSelector: Bool = false
     @State var newTransactionColor: Color = .blue
+    @State var incompleteInformationError: Bool = false
     @Binding var userData: UserData
     @Environment(\.dismiss) var dismiss
     var body: some View {
@@ -112,13 +113,17 @@ struct NewTransactionView: View {
                         .glassEffect()
                         
                         Button {
-                            userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType, additionToBankAccount: moneyEarnt))
-                            if moneyEarnt {
-                                userData.balance += amountSpent
+                            if amountSpent != 0.0 && !transactionName.isEmpty {
+                                userData.transactions.append(Transaction(timeOfTransaction: Date(), transactionName: transactionName, transactionIcon: transactionSymbol, transactionAmount: amountSpent, receiptImagePath: nil, iconBackgroundColor: newTransactionColor, transactionCategory: transactionType, additionToBankAccount: moneyEarnt))
+                                if moneyEarnt {
+                                    userData.balance += amountSpent
+                                } else {
+                                    userData.balance -= amountSpent
+                                }
+                                dismiss()
                             } else {
-                                userData.balance -= amountSpent
+                                incompleteInformationError = true
                             }
-                            dismiss()
                         } label: {
                             Spacer()
                             Image(systemName: "book.badge.plus")
@@ -126,6 +131,10 @@ struct NewTransactionView: View {
                             Spacer()
                         }
                         .adaptiveProminentButtonStyle()
+                        .alert("Incomplete information", isPresented: $incompleteInformationError) {
+                            Text("Please ensure all details are provided before continuing")
+                            Button { } label: { Text("OK") }
+                        }
                         
                     }
                     .padding()

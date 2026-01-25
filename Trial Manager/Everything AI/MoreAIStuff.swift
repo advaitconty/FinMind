@@ -11,7 +11,7 @@ enum ConversationalPerson: Codable {
     case person, ai
 }
 
-struct ConversationItem: Codable, Identifiable {
+struct ConversationItem: Codable, Identifiable, Equatable {
     var id = UUID()
     var personResponding: ConversationalPerson
     var text: String

@@ -93,6 +93,7 @@ struct Subscription: Codable, Identifiable {
     var freeTrialEndDate: Date?
     var subscriptionColor: Color = .cyan
     var wantsReminderwhenFreeTrialExpires: Bool = false
+    var subscriptionPriority: SubscriptionPriority = .convenience
 }
 
 @Model
